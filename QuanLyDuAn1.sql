@@ -1,52 +1,29 @@
 ﻿create database QuanLyDuAn
 use QuanLyDuAn
 
-create table PhongBan(
-	MaPhongBan NVARCHAR(3) PRIMARY KEY,
-	TenPhongBan NVARCHAR(30) NOT NULL UNIQUE,
-	NgayThanhLap FLOAT NOT NULL CHECK(NgayThanhLap > 0),
-	PhuCap FLOAT NOT NULL CHECK(PhuCap > 0)
+CREATE TABLE PhongBan (
+    MaPhongBan NVARCHAR(3) PRIMARY KEY,
+    TenPhongBan NVARCHAR(30) NOT NULL UNIQUE,
+    NgayThanhLap DATETIME NOT NULL,
+    PhuCap FLOAT NOT NULL CHECK(PhuCap > 0)
 );
 
-create table NhanVien(
-	MaNhanVien NVARCHAR(5) PRIMARY KEY,
-	HoTen NVARCHAR(30) NOT NULL,
-	MaPhongBan NVARCHAR(3) FOREIGN KEY REFERENCES PhongBan(MaPhongBan),
-	NgayVaoLam DATE NOT NULL,
-	MucLuong FLOAT NOT NULL CHECK(MucLuong > 0)
+CREATE TABLE NhanVien (
+    MaNhanVien NVARCHAR(5) PRIMARY KEY,
+    HoTen NVARCHAR(30) NOT NULL,
+    MaPhongBan NVARCHAR(3),
+    NgayVaoLam DATE NOT NULL,
+    MucLuong FLOAT NOT NULL CHECK(MucLuong > 0),
+    FOREIGN KEY (MaPhongBan) REFERENCES PhongBan(MaPhongBan)
 );
 
-create table DuAn(
-	MaDuAn NVARCHAR(3) PRIMARY KEY,
-	TenDuAn NVARCHAR(30) NOT NULL UNIQUE,
-	TongKinhPhi FLOAT NOT NULL CHECK(TongKinhPhi > 0),
-	MaNhanVienPhuTrach NVARCHAR(5) FOREIGN KEY REFERENCES NhanVien(MaNhanVien)
+CREATE TABLE DuAn (
+    MaDuAn NVARCHAR(3) PRIMARY KEY,
+    TenDuAn NVARCHAR(30) NOT NULL UNIQUE,
+    TongKinhPhi DECIMAL(18, 2) NOT NULL CHECK(TongKinhPhi > 0), 
+    MaNhanVienPhuTrach NVARCHAR(5),
+    FOREIGN KEY (MaNhanVienPhuTrach) REFERENCES NhanVien(MaNhanVien)
 );
-
--- Xóa ràng buộc CHECK hiện tại trên cột NgayThanhLap
-ALTER TABLE PhongBan
-DROP CONSTRAINT CK__PhongBan__NgayTh__38996AB5;
-
--- Thay đổi kiểu dữ liệu của cột NgayThanhLap thành DATETIME
-ALTER TABLE PhongBan
-ALTER COLUMN NgayThanhLap DATETIME NOT NULL;
-
--- Thêm lại ràng buộc CHECK nếu cần thiết (nếu bạn cần đảm bảo rằng NgayThanhLap phải có giá trị hợp lệ)
--- ALTER TABLE PhongBan
--- ADD CONSTRAINT CK_PhongBan_NgayThanhLap CHECK (NgayThanhLap > '1900-01-01');
-
--- Xóa ràng buộc CHECK hiện tại trên cột TongKinhPhi
-ALTER TABLE DuAn
-DROP CONSTRAINT CK__DuAn__TongKinhPh__412EB0B6;
-
--- Thay đổi kiểu dữ liệu của cột TongKinhPhi thành DECIMAL
-ALTER TABLE DuAn
-ALTER COLUMN TongKinhPhi DECIMAL(18, 2) NOT NULL;
-
--- Thêm lại ràng buộc CHECK nếu cần thiết (nếu bạn cần đảm bảo rằng TongKinhPhi phải có giá trị hợp lệ)
-ALTER TABLE DuAn
-ADD CONSTRAINT CK_DuAn_TongKinhPhi CHECK (TongKinhPhi > 0);
-
 
 select * from DuAn
 --Cau 1
