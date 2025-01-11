@@ -23,6 +23,32 @@ create table DuAn(
 	MaNhanVienPhuTrach NVARCHAR(5) FOREIGN KEY REFERENCES NhanVien(MaNhanVien)
 );
 
+-- Xóa ràng buộc CHECK hiện tại trên cột NgayThanhLap
+ALTER TABLE PhongBan
+DROP CONSTRAINT CK__PhongBan__NgayTh__38996AB5;
+
+-- Thay đổi kiểu dữ liệu của cột NgayThanhLap thành DATETIME
+ALTER TABLE PhongBan
+ALTER COLUMN NgayThanhLap DATETIME NOT NULL;
+
+-- Thêm lại ràng buộc CHECK nếu cần thiết (nếu bạn cần đảm bảo rằng NgayThanhLap phải có giá trị hợp lệ)
+-- ALTER TABLE PhongBan
+-- ADD CONSTRAINT CK_PhongBan_NgayThanhLap CHECK (NgayThanhLap > '1900-01-01');
+
+-- Xóa ràng buộc CHECK hiện tại trên cột TongKinhPhi
+ALTER TABLE DuAn
+DROP CONSTRAINT CK__DuAn__TongKinhPh__412EB0B6;
+
+-- Thay đổi kiểu dữ liệu của cột TongKinhPhi thành DECIMAL
+ALTER TABLE DuAn
+ALTER COLUMN TongKinhPhi DECIMAL(18, 2) NOT NULL;
+
+-- Thêm lại ràng buộc CHECK nếu cần thiết (nếu bạn cần đảm bảo rằng TongKinhPhi phải có giá trị hợp lệ)
+ALTER TABLE DuAn
+ADD CONSTRAINT CK_DuAn_TongKinhPhi CHECK (TongKinhPhi > 0);
+
+
+select * from DuAn
 --Cau 1
 create procedure XoaPhongBan
 	@MaPhongBan nvarchar(3)
